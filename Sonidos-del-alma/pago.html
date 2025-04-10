@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago Electrónico</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #pago {
+      text-align: center;
+      padding: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    input {
+      font-size: 16px;
+      padding: 10px;
+      margin: 5px 0 20px 0;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    /* Estilos para el Popup */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .popup button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .popup button:hover {
+      background-color: #218838;
+    }
+
+    .popup .cancelar {
+      background-color: #dc3545;
+    }
+
+    .popup .cancelar:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pago Electrónico</h1>
+  </header>
+
+  <section id="pago">
+    <h2>Completa tu pago:</h2>
+    <form id="form-pago">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="tarjeta">Número de Tarjeta</label>
+      <input type="text" id="tarjeta" name="tarjeta" required>
+
+      <label for="vencimiento">Fecha de Vencimiento</label>
+      <input type="month" id="vencimiento" name="vencimiento" required>
+
+      <label for="cvv">CVV</label>
+      <input type="text" id="cvv" name="cvv" required>
+
+      <button type="submit">Confirmar Compra</button>
+    </form>
+  </section>
+
+  <!-- Popup de confirmación -->
+  <div id="popup" class="popup">
+    <h3>¿Estás seguro de que deseas confirmar la compra?</h3>
+    <button id="confirmar-pago">Sí, Confirmar</button>
+    <button class="cancelar" id="cancelar-pago">Cancelar</button>
+  </div>
+
+  <script>
+    // Mostrar popup de confirmación cuando el formulario es enviado
+    document.getElementById("form-pago").addEventListener("submit", function(event) {
+      event.preventDefault(); // Evitar que el formulario se envíe realmente
+      document.getElementById("popup").style.display = "block"; // Mostrar el popup
+    });
+
+    // Cuando se hace clic en "Confirmar"
+    document.getElementById("confirmar-pago").addEventListener("click", function() {
+      alert("¡Pago exitoso! Redirigiendo...");
+      setTimeout(function() {
+        window.location.href = "gracias.html"; // Redirigir a la página de "Gracias por tu compra"
+      }, 1000); // Espera 1 segundo antes de redirigir
+    });
+
+    // Cuando se hace clic en "Cancelar"
+    document.getElementById("cancelar-pago").addEventListener("click", function() {
+      document.getElementById("popup").style.display = "none"; // Ocultar el popup
+    });
+  </script>
+</body>
+</html>
