@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Catálogo de Instrumentos Musicales</h1>
+    </header>
+
+    <!-- Barra de categorías -->
+    <div id="menu-categorias">
+        <button onclick="mostrarProductos('cuerda')">Cuerda</button>
+        <button onclick="mostrarProductos('viento')">Viento</button>
+        <button onclick="mostrarProductos('percusion')">Percusión</button>
+        <button onclick="mostrarProductos()">Mostrar todo</button>
+    </div>
+
+    <!-- Contenedor con productos -->
+    <div id="contenedor" class="contenedor-flex">
+        <!-- Contenedor de productos -->
+        <div id="productos" class="productos">
+            <div class="producto" data-categoria="cuerda">
+                <img src="assets/img/guitarra.jpg" alt="Guitarra Flamenca">
+                <h3>Guitarra Flamenca</h3>
+                <p>Sonido clásico del flamenco.</p>
+                <p>Precio: $150</p>
+                <button onclick="agregarAlCarrito('Guitarra Flamenca', 150)">Agregar</button>
+            </div>
+            <div class="producto" data-categoria="viento">
+                <img src="assets/img/saxofon.jpg" alt="Saxofón">
+                <h3>Saxofón</h3>
+                <p>Sonido suave y melódico.</p>
+                <p>Precio: $200</p>
+                <button onclick="agregarAlCarrito('Saxofón', 200)">Agregar</button>
+            </div>
+            <div class="producto" data-categoria="percusion">
+                <img src="assets/img/timbales.jpg" alt="Timbales">
+                <h3>Timbales</h3>
+                <p>Para un ritmo potente.</p>
+                <p>Precio: $120</p>
+                <button onclick="agregarAlCarrito('Timbales', 120)">Agregar</button>
+            </div>
+            <div class="producto" data-categoria="percusion">
+                <img src="assets/img/flamenco.jpg" alt="flamenco">
+                <h3>Guitarra Flamenca</h3>
+                <p>Sonido auténtico y vibrante.</p>
+                <p>Precio: $160</p>
+                <button onclick="agregarAlCarrito('Guitarra Flamenca', 160)">Agregar</button>
+            </div>
+        </div>
+
+        <!-- Carrito de Compras (menú desplegable) -->
+        <div id="carrito" class="carrito">
+          <button onclick="toggleCarrito()">Carrito</button>
+          <div id="carrito-contenido" class="carrito-contenido" style="display: none;">
+              <button onclick="toggleCarrito()" id="cerrar-carrito">Cerrar</button> <!-- Botón para cerrar el carrito -->
+              <h2>Carrito de Compras</h2>
+              <div id="carrito-lista">
+                  <!-- Aquí se mostrarán los productos agregados -->
+              </div>
+              <div id="total-container">
+                  <p>Total a Pagar:</p>
+                  <p id="total">$0</p>
+              </div>
+              <button id="pago" onclick="irAlPago()">Ir a pagar</button>
+          </div>
+      </div>
+      
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Catálogo de Instrumentos Musicales</p>
+    </footer>
+
+    <script>
+        let carrito = [];
+        let total = 0;
+
+        // Función para agregar productos al carrito
+        function agregarAlCarrito(nombre, precio) {
+            const productoExistente = carrito.find(item => item.nombre === nombre);
+
+            if (productoExistente) {
+                // Si el producto ya está en el carrito, aumentar la cantidad
+                productoExistente.cantidad++;
+            } else {
+                // Si el producto no está en el carrito, agregarlo con cantidad 1
+                carrito.push({ nombre, precio, cantidad: 1 });
+            }
+
+            total += precio;
+            actualizarCarrito();
+        }
+
+        // Función para eliminar productos del carrito
+        function eliminar(indice) {
+            total -= carrito[indice].precio * carrito[indice].cantidad;
+            carrito.splice(indice, 1);
+            actualizarCarrito();
+        }
+
+        // Función para incrementar la cantidad de un producto
+        function incrementarCantidad(indice) {
+            carrito[indice].cantidad++;
+            total += carrito[indice].precio;
+            actualizarCarrito();
+        }
+
+        // Función para decrementar la cantidad de un producto
+        function decrementarCantidad(indice) {
+            if (carrito[indice].cantidad > 1) {
+                carrito[indice].cantidad--;
+                total -= carrito[indice].precio;
+                actualizarCarrito();
+            }
+        }
+
+        // Función para mostrar los productos en el carrito
+        function actualizarCarrito() {
+            const listaCarrito = document.getElementById("carrito-lista");
+            listaCarrito.innerHTML = ''; // Limpiar la lista antes de actualizar
+
+            carrito.forEach((item, index) => {
+                const itemHTML = `
+                    <div class='carrito-item'>
+                        <p>${item.nombre} - $${item.precio} x ${item.cantidad} = $${item.precio * item.cantidad}</p>
+                        <button onclick='decrementarCantidad(${index})'>-</button>
+                        <span>${item.cantidad}</span>
+                        <button onclick='incrementarCantidad(${index})'>+</button>
+                        <button onclick='eliminar(${index})'>x</button>
+                    </div>
+                `;
+                listaCarrito.innerHTML += itemHTML;
+            });
+
+            const totalContainer = document.getElementById("total");
+            totalContainer.textContent = `$${total}`;
+        }
+
+        // Función para filtrar productos por categoría
+        function mostrarProductos(categoria = '') {
+            const productos = document.querySelectorAll('.producto');
+            productos.forEach(producto => {
+                if (categoria === '' || producto.getAttribute('data-categoria') === categoria) {
+                    producto.style.display = 'block';
+                } else {
+                    producto.style.display = 'none';
+                }
+            });
+        }
+
+        // Función para simular el pago
+        function irAlPago() {
+            if (carrito.length === 0) {
+                alert('Tu carrito está vacío. Agrega productos antes de pagar.');
+            } else {
+                // Redirigir a la página de pago si la tienes
+                window.location.href = "pago.html"; // Cambia esto por la URL de la página de pago real
+            }
+        }
+
+        // Función para alternar la visibilidad del carrito y hacer el "slide"
+        function toggleCarrito() {
+            const carritoContenido = document.getElementById("carrito-contenido");
+            const productosContainer = document.getElementById("productos");
+            if (carritoContenido.style.display === "none" || carritoContenido.style.display === "") {
+                carritoContenido.style.display = "block";
+                carritoContenido.classList.add('expandido');
+                productosContainer.classList.add('desenfocar');
+            } else {
+                carritoContenido.style.display = "none";
+                carritoContenido.classList.remove('expandido');
+                productosContainer.classList.remove('desenfocar');
+            }
+        }
+    </script>
+</body>
+</html>
